@@ -19,6 +19,7 @@ bool window_init(const char* title, int width, int height)
 
     glfwWindowHint(GLFW_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_VERSION_MINOR, 3);
+    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     window = glfwCreateWindow(width, height, title, NULL, NULL);
     if (!window)
@@ -52,12 +53,14 @@ void window_tick()
 {
     while (!glfwWindowShouldClose(window))
     {
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         game_update(0);
-
-        glfwSwapBuffers(window);
-    
+        
         game_render();
-
+       
+        glfwSwapBuffers(window); 
         glfwPollEvents();
     }
 }

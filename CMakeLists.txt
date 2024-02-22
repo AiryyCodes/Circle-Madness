@@ -10,6 +10,8 @@ file(GLOB SOURCES
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+file(COPY resources DESTINATION ${CMAKE_BINARY_DIR})
+
 find_package(glfw)
 target_link_libraries(${PROJECT_NAME} glfw)
 
