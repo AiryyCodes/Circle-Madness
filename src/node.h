@@ -11,6 +11,10 @@
 class Node
 {
 public:
+    Node() : position({0.0f, 0.0f}) {}
+    Node(glm::vec2 arg_position) : position(arg_position) {}
+    virtual ~Node() {}
+
     inline glm::vec2& get_position()
     {
         return position;
@@ -34,7 +38,7 @@ public:
     inline glm::mat4 get_matrix()
     {
         glm::mat4 matrix = glm::mat4(1.0f);
-        matrix = glm::translate(matrix, glm::vec3(position.x, position.y, 1.0f));
+        matrix = glm::translate(matrix, glm::vec3(position.x, position.y, 0.0f));
         matrix = glm::rotate(matrix, rotation.x, glm::vec3(-1.0f, 0.0f, 0.0f));
         matrix = glm::rotate(matrix, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
         matrix = glm::scale(matrix, glm::vec3(scale.x, scale.y, 1.0f));
@@ -62,10 +66,10 @@ public:
         return temp;
     }
 
-private:
-    glm::vec2 position{0.0f, 0.0f};
+protected:
+    glm::vec2 position;
     glm::vec2 rotation{0.0f, 0.0f};
-    glm::vec2 scale{1.0f, 1.0f};
+    glm::vec2 scale{500.0f, 500.0f};
 
     std::vector<Component*> components;
 };

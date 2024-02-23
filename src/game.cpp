@@ -1,9 +1,11 @@
 #include "game.h"
+#include "camera.h"
 #include "input.h"
 #include "shader.h"
 #include "sprite.h"
 #include "scene.h"
 #include "components/sprite_renderer.h"
+#include "window.h"
 
 #include <cstdio>
 #include <glad/gl.h>
@@ -14,6 +16,7 @@ Shader shader;
 Sprite sprite;
 Scene current_scene;
 Node player_node;
+Camera camera;
 
 bool game_init()
 {
@@ -21,8 +24,12 @@ bool game_init()
 
     sprite = create_sprite("resources/textures/Player.png");
 
+    camera.get_position().x = -(get_window_width() / 2);
+    camera.get_position().y = -(get_window_height() / 2);
+
     player_node.add_component(new SpriteRenderer(sprite));
     current_scene.add_node(&player_node);
+    current_scene.add_node(&camera);
 
     for (Node* node : current_scene.get_nodes())
     {
@@ -37,11 +44,15 @@ bool game_init()
 
 void game_update(double dt)
 {
-    // glViewport(0, 0, 1280, 720);
+    glViewport(0, 0, get_window_width(), get_window_height());
 
     if (is_key_down(GLFW_KEY_A))
     {
-        printf("A is down\n");
+        camera.get_position().x += 100.0f;
+    }
+    else if (is_key_down(GLFW_KEY_D))
+    {
+        camera.get_position().x -= 100.0f;
     }
 
     if (is_key_just_down(GLFW_KEY_S))
@@ -53,10 +64,18 @@ void game_update(double dt)
 void game_render()
 {
     bind_shader(shader);
+
+    glm::mat4 proj_matrix = camera.get_proj_matrix();
+    set_uniform(shader, "projection", proj_matrix);
+        
+    glm::mat4 view_matrix = camera.get_view_matrix();
+    set_uniform(shader, "view", view_matrix);
+
     for (Node* node : current_scene.get_nodes())
     {
-        glm::mat4 matrix = node->get_matrix();
-        set_uniform(shader, "transform", matrix);
+        glm::mat4 transform_matrix = node->get_matrix();
+        set_uniform(shader, "transform", transform_matrix);
+
         std::vector<SpriteRenderer> renderers = node->get_components<SpriteRenderer>();
         for (SpriteRenderer renderer : renderers)
         {

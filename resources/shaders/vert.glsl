@@ -8,10 +8,12 @@ out vec3 out_color;
 out vec2 out_tex_coord;
 
 uniform mat4 transform;
+uniform mat4 projection;
+uniform mat4 view;
 
 void main()
 {
-    gl_Position = transform * vec4(l_position, 1.0);
+    gl_Position = projection * view * transform * vec4(l_position, 1.0);
     out_color = l_color;
     out_tex_coord = l_tex_coord;
 }

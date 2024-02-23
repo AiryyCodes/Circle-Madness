@@ -9,8 +9,14 @@
 
 GLFWwindow* window;
 
+int window_width;
+int window_height;
+
 bool window_init(const char* title, int width, int height)
 {
+    window_width = width;
+    window_height = height;
+
     if (!glfwInit())
     {
         printf("Failed to initialize GLFW.\n");
@@ -19,8 +25,8 @@ bool window_init(const char* title, int width, int height)
 
     glfwWindowHint(GLFW_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_VERSION_MINOR, 3);
-    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+    // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    
     window = glfwCreateWindow(width, height, title, NULL, NULL);
     if (!window)
     {
@@ -32,6 +38,11 @@ bool window_init(const char* title, int width, int height)
     glfwMakeContextCurrent(window);
 
     glfwSetKeyCallback(window, key_callback);
+
+    glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height) {
+        window_width = width;
+        window_height = height;
+    });
 
     int version = gladLoadGL(glfwGetProcAddress);
     if (version == 0)
@@ -55,6 +66,7 @@ void window_tick()
     {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        glViewport(0, 0, window_width, window_height);
 
         game_update(0);
         
@@ -69,4 +81,14 @@ void window_cleanup()
 {
     glfwDestroyWindow(window);
     glfwTerminate();
+}
+
+int get_window_width()
+{
+    return window_width;
+}
+
+int get_window_height()
+{
+    return window_height;
 }

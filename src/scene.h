@@ -17,6 +17,37 @@ public:
         return nodes;
     }
 
+    template<typename T>
+    inline T* get_node()
+    {
+        for (auto* node : nodes)
+        {
+            if (typeid(*node) == typeid(T))
+            {
+                if (T* derived = dynamic_cast<T*>(node))
+                    return derived;
+            }
+        }
+
+        return nullptr;
+    }
+
+    template<typename T>
+    inline std::vector<T*> get_nodes()
+    {
+        std::vector<T*> temp{};
+        for (auto* node : nodes)
+        {
+            if (typeid(*node) == typeid(T))
+            {
+                T* derived = dynamic_cast<T*>(node);
+                temp.push_back(derived);
+            }
+        }
+
+        return temp;
+    }    
+
 private:
     std::vector<Node*> nodes;
 };
