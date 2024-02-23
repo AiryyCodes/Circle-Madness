@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iterator>
 #include <string>
+#include <glm/gtc/type_ptr.hpp>
 
 void compile_shader(unsigned int shader, const char* path);
 std::string read_file(const char* file_path);
@@ -72,4 +73,14 @@ std::string read_file(const char* file_path)
 {
     std::ifstream in(file_path);
     return std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+}
+
+void set_uniform(unsigned int shader, std::string location, glm::vec2& value)
+{
+    glUniform2fv(glGetUniformLocation(shader, location.c_str()), 1, glm::value_ptr(value));
+}
+
+void set_uniform(unsigned int shader, std::string location, glm::mat4& value)
+{
+    glUniformMatrix4fv(glGetUniformLocation(shader, location.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
