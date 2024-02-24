@@ -1,13 +1,14 @@
 #include "game.h"
 #include "camera.h"
-#include "input.h"
+#include "plane.h"
 #include "shader.h"
 #include "sprite.h"
 #include "scene.h"
-#include "components/sprite_renderer.h"
 #include "window.h"
+#include "player.h"
 
-#include <cstdio>
+#include "components/sprite_renderer.h"
+
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <glm/fwd.hpp>
@@ -15,20 +16,31 @@
 Shader shader;
 Sprite sprite;
 Scene current_scene;
-Node player_node;
+Player player;
+Plane plane;
 Camera camera;
+
+Sprite plane_sprite;
 
 bool game_init()
 {
     shader = create_shader("resources/shaders/vert.glsl", "resources/shaders/frag.glsl");
 
-    sprite = create_sprite("resources/textures/Player.png");
+    sprite = create_sprite("resources/textures/player.png");
 
-    camera.get_position().x = -(get_window_width() / 2);
-    camera.get_position().y = -(get_window_height() / 2);
+    plane_sprite = create_sprite("resources/textures/placeholder.png");
+    //plane.add_component(new SpriteRenderer(plane_sprite));
+    plane.get_scale().x = get_window_width();
+    plane.get_scale().y = get_window_height();
+    plane.get_position().x = -get_window_width() / 2.0f;
+    plane.get_position().y = -get_window_height() / 2.0f;
+    current_scene.add_node(&plane);
 
-    player_node.add_component(new SpriteRenderer(sprite));
-    current_scene.add_node(&player_node);
+    camera.get_position().x = -(get_window_width() / 2.0f);
+    camera.get_position().y = -(get_window_height() / 2.0f);
+
+    player.add_component(new SpriteRenderer(sprite));
+    current_scene.add_node(&player);
     current_scene.add_node(&camera);
 
     for (Node* node : current_scene.get_nodes())
@@ -39,26 +51,15 @@ bool game_init()
         }
     }
 
+    player.init();
+
     return true;
 }
 
-void game_update(double dt)
+void game_update()
 {
-    glViewport(0, 0, get_window_width(), get_window_height());
-
-    if (is_key_down(GLFW_KEY_A))
-    {
-        camera.get_position().x += 100.0f;
-    }
-    else if (is_key_down(GLFW_KEY_D))
-    {
-        camera.get_position().x -= 100.0f;
-    }
-
-    if (is_key_just_down(GLFW_KEY_S))
-    {
-        printf("S was just pressed\n");
-    }
+    player.update();
+    player.move();
 }
 
 void game_render()
@@ -96,4 +97,9 @@ void game_cleanup()
         delete node;
     }
     glDeleteProgram(shader);
+}
+
+Scene& get_current_scene()
+{
+    return current_scene;
 }

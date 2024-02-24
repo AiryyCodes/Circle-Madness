@@ -1,6 +1,7 @@
 #include "window.h"
 #include "game.h"
 #include "input.h"
+#include "time.h"
 
 #include <cstdio>
 
@@ -11,6 +12,9 @@ GLFWwindow* window;
 
 int window_width;
 int window_height;
+
+int framebuffer_width;
+int framebuffer_height;
 
 bool window_init(const char* title, int width, int height)
 {
@@ -38,10 +42,14 @@ bool window_init(const char* title, int width, int height)
     glfwMakeContextCurrent(window);
 
     glfwSetKeyCallback(window, key_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
+    glfwSetCursorPosCallback(window, cursor_pos_callback);
 
     glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height) {
         window_width = width;
         window_height = height;
+
+        glfwGetFramebufferSize(window, &framebuffer_width, &framebuffer_height);
     });
 
     int version = gladLoadGL(glfwGetProcAddress);
@@ -50,6 +58,9 @@ bool window_init(const char* title, int width, int height)
         printf("Failed to initialize OpenGL context.\n");
         return false;
     }
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     if (!game_init())
     {
@@ -64,11 +75,14 @@ void window_tick()
 {
     while (!glfwWindowShouldClose(window))
     {
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+    
+        update_time();
+
         glViewport(0, 0, window_width, window_height);
 
-        game_update(0);
+        game_update();
         
         game_render();
        
@@ -91,4 +105,14 @@ int get_window_width()
 int get_window_height()
 {
     return window_height;
+}
+
+int get_framebuffer_width()
+{
+    return framebuffer_width;
+}
+
+int get_framebuffer_height()
+{
+    return framebuffer_height;
 }

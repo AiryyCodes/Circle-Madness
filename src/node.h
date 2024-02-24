@@ -40,7 +40,7 @@ public:
         glm::mat4 matrix = glm::mat4(1.0f);
         matrix = glm::translate(matrix, glm::vec3(position.x, position.y, 0.0f));
         matrix = glm::rotate(matrix, rotation.x, glm::vec3(-1.0f, 0.0f, 0.0f));
-        matrix = glm::rotate(matrix, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+        matrix = glm::rotate(matrix, rotation.y, glm::vec3(0.0f, 0.0f, 1.0f));
         matrix = glm::scale(matrix, glm::vec3(scale.x, scale.y, 1.0f));
         return matrix;
     }
@@ -69,7 +69,7 @@ public:
 protected:
     glm::vec2 position;
     glm::vec2 rotation{0.0f, 0.0f};
-    glm::vec2 scale{500.0f, 500.0f};
+    glm::vec2 scale{50.0f, 50.0f};
 
     std::vector<Component*> components;
 };

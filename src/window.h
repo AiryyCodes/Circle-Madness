@@ -8,3 +8,6 @@ void window_cleanup();
 
 int get_window_width();
 int get_window_height();
+
+int get_framebuffer_width();
+int get_framebuffer_height();

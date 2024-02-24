@@ -2,6 +2,7 @@
 
 #include "node.h"
 
+#include <algorithm>
 #include <vector>
 
 class Scene
@@ -46,8 +47,15 @@ public:
         }
 
         return temp;
-    }    
+    }
 
+    template<typename T>
+    inline void remove_node(T* node)
+    {
+        nodes.erase(std::remove(nodes.begin(), nodes.end(), node), nodes.end());
+        delete node;
+    }
+    
 private:
     std::vector<Node*> nodes;
 };

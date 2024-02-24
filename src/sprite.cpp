@@ -1,5 +1,7 @@
 #include "sprite.h"
 
+#include <cmath>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -21,8 +23,8 @@ Sprite create_sprite(std::string texture_path)
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     if (data)
     {
@@ -31,7 +33,7 @@ Sprite create_sprite(std::string texture_path)
     }
     else
     {
-        printf("Failed to load texture. %s", texture_path.c_str());
+        printf("Failed to load texture. %s\n", texture_path.c_str());
     }
 
     stbi_image_free(data);
