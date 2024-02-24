@@ -58,6 +58,9 @@ bool game_init()
 
 void game_update()
 {
+    plane.get_scale().x = get_window_width();
+    plane.get_scale().y = get_window_height();
+
     player.update();
     player.move();
 }

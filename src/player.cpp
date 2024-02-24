@@ -53,6 +53,8 @@ void Player::update()
         bullet->get_position().x = (position.x + std::cos(angle) * bullet_radius * 25.0f);
         bullet->get_position().y = (position.y + std::sin(angle) * bullet_radius * 25.0f);
         bullet->get_rotation().y = angle;
+        bullet->get_scale().x = 25.0f;
+        bullet->get_scale().y = 25.0f;
 
         get_current_scene().add_node(bullet);
     }
