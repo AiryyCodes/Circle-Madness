@@ -4,7 +4,6 @@
 
 #include <glm/fwd.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <type_traits>
 #include <vector>
 #include <typeinfo>
 
@@ -14,6 +13,8 @@ public:
     Node() : position({0.0f, 0.0f}) {}
     Node(glm::vec2 arg_position) : position(arg_position) {}
     virtual ~Node() {}
+
+    bool is_inside(Node* node);
 
     inline glm::vec2& get_position()
     {

@@ -1,9 +1,12 @@
 #include "game.h"
+#include "bullet.h"
 #include "camera.h"
+#include "enemy.h"
 #include "plane.h"
 #include "shader.h"
 #include "sprite.h"
 #include "scene.h"
+#include "time.h"
 #include "window.h"
 #include "player.h"
 
@@ -21,6 +24,8 @@ Plane plane;
 Camera camera;
 
 Sprite plane_sprite;
+
+float enemy_time_passed;
 
 bool game_init()
 {
@@ -63,6 +68,21 @@ void game_update()
 
     player.update();
     player.move();
+
+    enemy_time_passed += get_delta_time();
+    if (enemy_time_passed > 2.5f)
+    {
+        Enemy* enemy = new Enemy();
+        enemy->init();
+        current_scene.add_node(enemy);
+        enemy_time_passed = 0.0f;
+    }
+
+    std::vector<Enemy*> enemies = current_scene.get_nodes<Enemy>();
+    for (auto* enemy : enemies)
+    {
+        enemy->move();
+    }
 }
 
 void game_render()
@@ -88,6 +108,23 @@ void game_render()
     }
 }
 
+void game_restart()
+{
+    Player* player = current_scene.get_node<Player>();
+    player->get_position().x = 0.0f;
+    player->get_position().y = 0.0f;
+    
+    for (Bullet* bullet : current_scene.get_nodes<Bullet>())
+    {
+        current_scene.remove_node(bullet);
+    }
+
+    for (Enemy* enemy : current_scene.get_nodes<Enemy>())
+    {
+        current_scene.remove_node(enemy);
+    }
+}
+
 void game_cleanup()
 {
     for (Node* node : current_scene.get_nodes())
@@ -95,6 +132,11 @@ void game_cleanup()
         for (SpriteRenderer renderer : node->get_components<SpriteRenderer>())
         {
             renderer.cleanup();
+        }
+
+        for (Component* component : node->get_components())
+        {
+            delete component;
         }
 
         delete node;

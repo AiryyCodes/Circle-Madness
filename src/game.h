@@ -8,6 +8,8 @@ void game_update();
 
 void game_render();
 
+void game_restart();
+
 void game_cleanup();
 
 Scene& get_current_scene();

@@ -50,6 +50,12 @@ public:
     }
 
     template<typename T>
+    inline bool has_node(T* node)
+    {
+        return std::find(nodes.begin(), nodes.end(), node) != nodes.end();
+    }
+
+    template<typename T>
     inline void remove_node(T* node)
     {
         nodes.erase(std::remove(nodes.begin(), nodes.end(), node), nodes.end());

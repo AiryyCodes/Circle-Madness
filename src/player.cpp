@@ -2,19 +2,18 @@
 #include "bullet.h"
 #include "camera.h"
 #include "components/sprite_renderer.h"
+#include "enemy.h"
 #include "game.h"
 #include "input.h"
-#include "node.h"
 #include "plane.h"
 #include "time.h"
 #include "math.h"
 #include "sprite.h"
-#include "window.h"
 
-#include <GL/gl.h>
+#include <cstdio>
+#include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <cmath>
-#include <cstdio>
 #include <glm/ext/quaternion_common.hpp>
 #include <glm/ext/quaternion_geometric.hpp>
 #include <glm/fwd.hpp>
@@ -62,14 +61,36 @@ void Player::update()
     Plane* plane = get_current_scene().get_node<Plane>();
 
     std::vector<Bullet*> bullets = get_current_scene().get_nodes<Bullet>();
+    std::vector<Enemy*> enemies = get_current_scene().get_nodes<Enemy>();
     for (Bullet* bullet : bullets)
     {
-        if (!plane->is_inside(bullet))
+        for (auto* enemy : enemies)
         {
-            get_current_scene().remove_node(bullet);
-            continue;
+            if (bullet->is_inside(enemy))
+            {
+                get_current_scene().remove_node(enemy);
+
+                get_current_scene().remove_node(bullet);
+            }
         }
-        bullet->get_position() += glm::vec2(std::cos(bullet->get_angle()), std::sin(bullet->get_angle())) * bullet_speed;
+
+        if (get_current_scene().has_node(bullet))
+        {
+            if (!bullet->is_inside(plane))
+            {
+                get_current_scene().remove_node(bullet);
+                continue;
+            }
+            bullet->get_position() += glm::vec2(std::cos(bullet->get_angle()), std::sin(bullet->get_angle())) * bullet_speed;
+        }
+    }
+
+    for (auto* enemy : enemies)
+    {
+        if (enemy->is_inside(this))
+        {
+            game_restart();
+        }
     }
 }
 
@@ -104,8 +125,6 @@ void Player::move()
     {
         velocity_x = lerp(lerp_speed * get_delta_time(), velocity_x, 0.0f);
     }
-
-    //printf("Velocity X: %f Velocity Y: %f\n", velocity_x, velocity_y);
 
     if (temp_velocity_y > 0.0f)
         get_position().y -= velocity_y * get_delta_time();
