@@ -27,7 +27,7 @@ float velocity_y;
 float temp_velocity_x;
 float temp_velocity_y;
 
-float bullet_speed = 10.0f;
+float bullet_speed = 600.0f;
 float bullet_radius = 2.0f;
 Sprite bullet_sprite;
 
@@ -97,7 +97,7 @@ void Player::update()
                 get_current_scene().remove_node(bullet);
                 continue;
             }
-            bullet->get_position() += glm::vec2(std::cos(bullet->get_angle()), std::sin(bullet->get_angle())) * bullet_speed;
+            bullet->get_position() += glm::vec2(std::cos(bullet->get_angle()), std::sin(bullet->get_angle())) * bullet_speed * (float)get_delta_time();
         }
     }
 
