@@ -29,7 +29,8 @@ bool window_init(const char* title, int width, int height)
 
     glfwWindowHint(GLFW_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_VERSION_MINOR, 3);
-    
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
     window = glfwCreateWindow(width, height, title, NULL, NULL);
     if (!window)
     {

@@ -88,11 +88,11 @@ void game_update()
     enemy_time_passed += get_delta_time();
     if (enemy_time_passed > difficulty)
     {
-        Enemy* enemy = new Enemy();
-        enemy->get_position().x = get_window_width() / 2.0f - enemy->get_scale().x;
-        enemy->get_position().y = get_window_height() / 2.0f - enemy->get_scale().y;
-        enemy->init();
-        current_scene.add_node(enemy);
+        //Enemy* enemy = new Enemy();
+        //enemy->get_position().x = get_window_width() / 2.0f - enemy->get_scale().x;
+        //enemy->get_position().y = get_window_height() / 2.0f - enemy->get_scale().y;
+        //enemy->init();
+        //current_scene.add_node(enemy);
         enemy_time_passed = 0.0f;
         difficulty -= 0.05f;
     }

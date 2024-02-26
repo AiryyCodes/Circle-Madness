@@ -62,18 +62,11 @@ void Player::update()
 
     Plane* plane = get_current_scene().get_node<Plane>();
 
-    if (get_position().x + (get_scale().x / 2.0f) >= get_window_width() / 2.0f) 
-        get_position().x = (get_window_width() / 2.0f) - (get_scale().x / 2.0f);
+    float half_width = get_window_width() / 2.0f;
+    float half_height = get_window_height() / 2.0f;
 
-    if (get_position().x - (get_scale().x / 2.0f) <= -(get_window_width() / 2.0f))
-        get_position().x = (-(get_window_width() / 2.0f)) + (get_scale().x / 2.0f);
-    
-    if (get_position().y + (get_scale().y / 2.0f) >= get_window_height() / 2.0f) 
-        get_position().y = (get_window_height() / 2.0f) - (get_scale().y / 2.0f);
-
-    if (get_position().y - (get_scale().y / 2.0f) <= -(get_window_height() / 2.0f))
-        get_position().y = (-(get_window_height() / 2.0f)) + (get_scale().y / 2.0f);
-
+    get_position().x = clamp(get_position().x, -half_width + (get_scale().x / 2.0f), half_width - (get_scale().x / 2.0f));
+    get_position().y = clamp(get_position().y, -half_height + (get_scale().y / 2.0f), half_height - (get_scale().y / 2.0f));
 
     std::vector<Bullet*> bullets = get_current_scene().get_nodes<Bullet>();
     std::vector<Enemy*> enemies = get_current_scene().get_nodes<Enemy>();
