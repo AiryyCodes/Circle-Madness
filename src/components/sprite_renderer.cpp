@@ -2,9 +2,9 @@
 
 #include <glad/gl.h>
 
-unsigned int vbo;
-unsigned int vao;
-unsigned int ebo;
+static unsigned int vbo;
+static unsigned int vao;
+static unsigned int ebo;
 
 float vertices[] = {
         // positions          // colors           // texture coords

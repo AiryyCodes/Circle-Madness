@@ -80,6 +80,11 @@ void set_uniform(unsigned int shader, std::string location, glm::vec2& value)
     glUniform2fv(glGetUniformLocation(shader, location.c_str()), 1, glm::value_ptr(value));
 }
 
+void set_uniform(unsigned int shader, std::string location, glm::vec3& value)
+{
+    glUniform3fv(glGetUniformLocation(shader, location.c_str()), 1, glm::value_ptr(value));
+}
+
 void set_uniform(unsigned int shader, std::string location, glm::mat4& value)
 {
     glUniformMatrix4fv(glGetUniformLocation(shader, location.c_str()), 1, GL_FALSE, glm::value_ptr(value));

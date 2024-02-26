@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.28)
-project(game)
+
+set(CMAKE_CXX_COMPILER "g++")
+
+project(game C CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_FLAGS "-I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/harfbuzz -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sysprof-6 -pthread")
 
 file(GLOB SOURCES
     "src/*.cpp"
@@ -25,6 +29,12 @@ target_link_libraries(${PROJECT_NAME} glfw)
 
 find_package(glm)
 target_link_libraries(${PROJECT_NAME} glm)
+
+find_package(freetype)
+target_link_libraries(${PROJECT_NAME} freetype)
+
+find_package(nanovg)
+target_link_libraries(${PROJECT_NAME} nanovg)
 
 add_subdirectory(ext/glad)
 target_link_libraries(${PROJECT_NAME} glad)

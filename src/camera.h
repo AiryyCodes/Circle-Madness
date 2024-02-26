@@ -16,7 +16,7 @@ public:
         width = get_window_width();
         height = get_window_height();
         glm::mat4 matrix(1.0f);
-        matrix = glm::ortho(0.0f, width, height, 0.0f, z_near, z_far);
+        matrix = glm::ortho(0.0f, width, height, 0.0f);
         return matrix;
     }
 

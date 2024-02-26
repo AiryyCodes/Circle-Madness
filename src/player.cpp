@@ -6,9 +6,11 @@
 #include "game.h"
 #include "input.h"
 #include "plane.h"
+#include "score.h"
 #include "time.h"
 #include "math.h"
 #include "sprite.h"
+#include "window.h"
 
 #include <cstdio>
 #include <glad/gl.h>
@@ -31,6 +33,7 @@ float bullet_radius = 2.0f;
 Sprite bullet_sprite;
 
 extern Camera camera;
+extern Score score;
 
 void Player::init()
 {
@@ -60,6 +63,19 @@ void Player::update()
 
     Plane* plane = get_current_scene().get_node<Plane>();
 
+    if (get_position().x + (get_scale().x / 2.0f) >= get_window_width() / 2.0f) 
+        get_position().x = (get_window_width() / 2.0f) - (get_scale().x / 2.0f);
+
+    if (get_position().x - (get_scale().x / 2.0f) <= -(get_window_width() / 2.0f)) // TODO: Copy above but reversed values
+        get_position().x = (-(get_window_width() / 2.0f)) + (get_scale().x / 2.0f);
+    
+    if (get_position().y + (get_scale().y / 2.0f) >= get_window_height() / 2.0f) 
+        get_position().y = (get_window_height() / 2.0f) - (get_scale().y / 2.0f);
+
+    if (get_position().y - (get_scale().y / 2.0f) <= -(get_window_height() / 2.0f)) // TODO: Copy above but reversed values
+        get_position().y = (-(get_window_height() / 2.0f)) + (get_scale().y / 2.0f);
+
+
     std::vector<Bullet*> bullets = get_current_scene().get_nodes<Bullet>();
     std::vector<Enemy*> enemies = get_current_scene().get_nodes<Enemy>();
     for (Bullet* bullet : bullets)
@@ -71,6 +87,7 @@ void Player::update()
                 get_current_scene().remove_node(enemy);
 
                 get_current_scene().remove_node(bullet);
+                score.increment();
             }
         }
 

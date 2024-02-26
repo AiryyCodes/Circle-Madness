@@ -10,4 +10,6 @@ void bind_shader(Shader &shader);
 void unbind_shader();
 
 void set_uniform(unsigned int shader, std::string location, glm::vec2& value);
+void set_uniform(unsigned int shader, std::string location, glm::vec3& value);
+
 void set_uniform(unsigned int shader, std::string location, glm::mat4& value);

@@ -48,7 +48,18 @@ public:
 
     inline void add_component(Component* component)
     {
+        component->set_parent(this);
         components.push_back(component);
+    }
+
+    template<typename T>
+    inline T* get_component()
+    {
+        for (auto* component : components)
+        {
+            if (typeid(*component) == typeid(T))
+                return dynamic_cast<T*>(component);
+        }
     }
 
     template<typename T>

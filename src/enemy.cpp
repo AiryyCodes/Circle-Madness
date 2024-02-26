@@ -33,6 +33,15 @@ void Enemy::init()
         position.x = random_float(-get_window_width(), get_window_width());
         position.y = random_float(-get_window_height(), get_window_height());
     }
+
+    for (Enemy* enemy : get_current_scene().get_nodes<Enemy>())
+    {
+        while (is_inside(enemy))
+        {
+            position.x = random_float(-get_window_width(), get_window_width());
+            position.y = random_float(-get_window_height(), get_window_height());
+        }
+    }
 }
 
 void Enemy::move()
