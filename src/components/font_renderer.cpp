@@ -23,7 +23,7 @@ void FontRenderer::init(Shader& shader)
 {
     Camera* camera = get_current_scene().get_node<Camera>();
     //glm::mat4 projection = camera->get_proj_matrix();
-    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(get_window_width()), 0.0f, static_cast<float>(get_window_height()));
+    glm::mat4 projection = camera->get_proj_matrix();
     bind_shader(shader);
     set_uniform(shader, "projection", projection);
 
@@ -71,12 +71,6 @@ void FontRenderer::init(Shader& shader)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        //printf("Glyph Advance: %i\n", face->glyph->advance.x);
 
         Character character = {
             texture,
@@ -85,18 +79,12 @@ void FontRenderer::init(Shader& shader)
             static_cast<unsigned int>(face->glyph->advance.x)
         };
         characters.insert(std::pair<char, Character>(c, character));
-        //printf("Character Advance 1: %i\n", characters[c].advance);
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
     FT_Done_Face(face);
     FT_Done_FreeType(library);
-
-    for (auto const &character : characters)
-    {
-        //printf("Character Advance 2: %i\n", character.second.advance);
-    }
 
     glGenVertexArrays(1, &font_vao);
     glGenBuffers(1, &font_vbo);
@@ -107,10 +95,6 @@ void FontRenderer::init(Shader& shader)
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
-    printf("Initialized font.\n");
-
-    //printf("Characters: %i\n", characters.size());
 }
 
 
@@ -119,28 +103,16 @@ void FontRenderer::render(Shader& shader)
     glm::mat4 proj_matrix = get_current_scene().get_node<Camera>()->get_proj_matrix();
 
     bind_shader(shader);
-    //set_uniform(shader, "projection", proj_matrix);
     set_uniform(shader, "text_color", this->color);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(font_vao);
 
     int x = parent->get_position().x;
 
-    //if (characters.size() <= 0)
-    //    printf("No characters found\n");
-
-    for (auto const &character : characters)
-    {
-        //printf("Character Advance 3: %i\n", character.second.advance);
-    }
-
     std::string::const_iterator c;
     for (c = this->text.begin(); c != this->text.end(); c++)
     {
-        //printf("Char: %c\n", *c);
         Character character = characters[*c];
-        //printf("Character: %s\n", character);
-        //printf("Character Advance: %i\n", characters[*c].advance);
 
         float x_pos = x + character.bearing.x * size;
         float y_pos = parent->get_position().y + (character.bearing.y - character.bearing.y) * size; 
@@ -149,33 +121,24 @@ void FontRenderer::render(Shader& shader)
         float h = character.size.y * size;
        
         float vertices[6][4] = {
-            { x_pos,     y_pos + h,   0.0f, 0.0f },            
-            { x_pos,     y_pos,       0.0f, 1.0f },
-            { x_pos + w, y_pos,       1.0f, 1.0f },
+            { x_pos, y_pos, 0.0f, 1.0f },            
+            { x_pos, y_pos - h, 0.0f, 0.0f },
+            { x_pos + w, y_pos - h, 1.0f, 0.0f },
 
-            { x_pos,     y_pos + h,   0.0f, 0.0f },
-            { x_pos + w, y_pos,       1.0f, 1.0f },
-            { x_pos + w, y_pos + h,   1.0f, 0.0f }           
+            { x_pos, y_pos, 0.0f, 1.0f },
+            { x_pos + w, y_pos - h, 1.0f, 0.0f },
+            { x_pos + w, y_pos, 1.0f, 1.0f }   
         };
-        // float vertices[6][4] = {
-        //     { x_pos, y_pos, 0.0f, 1.0f },            
-        //     { x_pos, y_pos - h, 0.0f, 0.0f },
-        //     { x_pos + w, y_pos - h, 1.0f, 0.0f },
-        //     { x_pos, y_pos, 0.0f, 1.0f },
-        //     { x_pos + w, y_pos - h, 1.0f, 0.0f },
-        //     { x_pos + w, y_pos, 1.0f, 1.0f }           
-        // };
-        // float vertices[6][4] = {
-        //     { x_pos, y_pos, 0.0f, 1.0f },
-        //     { x_pos + w, y_pos, 1.0f, 1.0f },
-        //     { x_pos, y_pos - h, 0.0f, 0.0f },
-        //     { x_pos, y_pos - h, 0.0f, 0.0f },
-        //     { x_pos + w, y_pos, 1.0f, 1.0f },
-        //     { x_pos + w, y_pos - h, 1.0f, 0.0f }
-        // };
 
-        //printf("Font Texture ID: %i\n", character.texture_id);
-        //printf("Font Bearing X: %i\n", character.bearing.x);
+        // float vertices[6][4] = {
+        //     { x_pos,     y_pos + h,   0.0f, 0.0f },            
+        //     { x_pos,     y_pos,       0.0f, 1.0f },
+        //     { x_pos + w, y_pos,       1.0f, 1.0f },
+        //
+        //     { x_pos,     y_pos + h,   0.0f, 0.0f },
+        //     { x_pos + w, y_pos,       1.0f, 1.0f },
+        //     { x_pos + w, y_pos + h,   1.0f, 0.0f }           
+        // };
 
         glBindTexture(GL_TEXTURE_2D, character.texture_id);
         glBindBuffer(GL_ARRAY_BUFFER, font_vbo);
@@ -188,7 +151,6 @@ void FontRenderer::render(Shader& shader)
 
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
-    //unbind_shader();
 }
 
 void FontRenderer::set_text(std::string text)

@@ -12,7 +12,6 @@
 #include "sprite.h"
 #include "window.h"
 
-#include <cstdio>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <cmath>
@@ -66,13 +65,13 @@ void Player::update()
     if (get_position().x + (get_scale().x / 2.0f) >= get_window_width() / 2.0f) 
         get_position().x = (get_window_width() / 2.0f) - (get_scale().x / 2.0f);
 
-    if (get_position().x - (get_scale().x / 2.0f) <= -(get_window_width() / 2.0f)) // TODO: Copy above but reversed values
+    if (get_position().x - (get_scale().x / 2.0f) <= -(get_window_width() / 2.0f))
         get_position().x = (-(get_window_width() / 2.0f)) + (get_scale().x / 2.0f);
     
     if (get_position().y + (get_scale().y / 2.0f) >= get_window_height() / 2.0f) 
         get_position().y = (get_window_height() / 2.0f) - (get_scale().y / 2.0f);
 
-    if (get_position().y - (get_scale().y / 2.0f) <= -(get_window_height() / 2.0f)) // TODO: Copy above but reversed values
+    if (get_position().y - (get_scale().y / 2.0f) <= -(get_window_height() / 2.0f))
         get_position().y = (-(get_window_height() / 2.0f)) + (get_scale().y / 2.0f);
 
 

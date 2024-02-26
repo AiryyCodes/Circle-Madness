@@ -15,7 +15,6 @@
 
 #include "components/sprite_renderer.h"
 
-#include <cstdio>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_clip_space.hpp>
@@ -30,8 +29,6 @@ Plane plane;
 Camera camera;
 Score score;
 
-Sprite plane_sprite;
-
 float enemy_time_passed;
 float difficulty = 2.0f;
 
@@ -42,8 +39,6 @@ bool game_init()
 
     sprite = create_sprite("resources/textures/player.png");
 
-    plane_sprite = create_sprite("resources/textures/placeholder.png");
-    //plane.add_component(new SpriteRenderer(plane_sprite));
     plane.get_scale().x = get_window_width();
     plane.get_scale().y = get_window_height();
     plane.get_position().x = -get_window_width() / 2.0f;
@@ -58,12 +53,9 @@ bool game_init()
     current_scene.add_node(&camera);
 
     score.add_component(new FontRenderer("Score: 0", glm::vec3(0.25f, 0.25f, 0.25f), "resources/fonts/Antonio-Bold.ttf", 1.0));
-    score.get_position().y = get_window_height() - 48.0f;
+    score.get_position().y = 48.0f;
     score.get_position().x = 4.0f;
     current_scene.add_node(&score);
-
-    glm::mat4 proj_matrix = camera.get_proj_matrix();
-    //set_uniform(text_shader, "projection", proj_matrix);
 
     for (Node* node : current_scene.get_nodes())
     {
@@ -97,15 +89,13 @@ void game_update()
     if (enemy_time_passed > difficulty)
     {
         Enemy* enemy = new Enemy();
-        enemy->get_position().x = get_window_width() / 3.0f;
-        enemy->get_position().y = get_window_height() / 3.0f;
+        enemy->get_position().x = get_window_width() / 2.0f - enemy->get_scale().x;
+        enemy->get_position().y = get_window_height() / 2.0f - enemy->get_scale().y;
         enemy->init();
         current_scene.add_node(enemy);
         enemy_time_passed = 0.0f;
         difficulty -= 0.05f;
     }
-
-    printf("Difficulty: %f\n", difficulty);
 
     std::vector<Enemy*> enemies = current_scene.get_nodes<Enemy>();
     for (auto* enemy : enemies)
@@ -119,13 +109,10 @@ void game_render()
     bind_shader(shader);
 
     glm::mat4 proj_matrix = camera.get_proj_matrix();
-    //glm::mat4 proj_matrix = glm::ortho(0.0f, (float)get_window_width(), 0.0f, (float)get_window_height());
     set_uniform(shader, "projection", proj_matrix);
         
     glm::mat4 view_matrix = camera.get_view_matrix();
     set_uniform(shader, "view", view_matrix);
-
-    //bind_shader(text_shader);
 
     for (Node* node : current_scene.get_nodes())
     {

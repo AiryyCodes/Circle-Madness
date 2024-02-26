@@ -60,6 +60,7 @@ public:
             if (typeid(*component) == typeid(T))
                 return dynamic_cast<T*>(component);
         }
+        return nullptr;
     }
 
     template<typename T>

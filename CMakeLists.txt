@@ -24,17 +24,14 @@ target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 file(COPY resources DESTINATION ${CMAKE_BINARY_DIR})
 
-find_package(glfw)
+add_subdirectory(ext/glfw)
 target_link_libraries(${PROJECT_NAME} glfw)
 
-find_package(glm)
+add_subdirectory(ext/glm)
 target_link_libraries(${PROJECT_NAME} glm)
 
-find_package(freetype)
+add_subdirectory(ext/freetype)
 target_link_libraries(${PROJECT_NAME} freetype)
-
-find_package(nanovg)
-target_link_libraries(${PROJECT_NAME} nanovg)
 
 add_subdirectory(ext/glad)
 target_link_libraries(${PROJECT_NAME} glad)

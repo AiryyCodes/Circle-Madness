@@ -8,10 +8,6 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-//#include <nanovg.h>
-//#define NANOVG_GL3_IMPLEMENTATION
-//#include <nanovg_gl.h>
-
 GLFWwindow* window;
 
 int window_width;
@@ -33,7 +29,6 @@ bool window_init(const char* title, int width, int height)
 
     glfwWindowHint(GLFW_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_VERSION_MINOR, 3);
-    // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
     window = glfwCreateWindow(width, height, title, NULL, NULL);
     if (!window)
@@ -66,8 +61,6 @@ bool window_init(const char* title, int width, int height)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    //NVGcontext* vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
-
     if (!game_init())
     {
         printf("Failed to initialize the game.\n");
@@ -81,10 +74,9 @@ void window_tick()
 {
     while (!glfwWindowShouldClose(window))
     {
-        //glClearColor(0.2323f, 0.756f, 0.34f, 1.0f);
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-    
+
         update_time();
 
         glViewport(0, 0, window_width, window_height);
