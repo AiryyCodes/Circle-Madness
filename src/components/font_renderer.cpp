@@ -130,16 +130,6 @@ void FontRenderer::render(Shader& shader)
             { x_pos + w, y_pos, 1.0f, 1.0f }   
         };
 
-        // float vertices[6][4] = {
-        //     { x_pos,     y_pos + h,   0.0f, 0.0f },            
-        //     { x_pos,     y_pos,       0.0f, 1.0f },
-        //     { x_pos + w, y_pos,       1.0f, 1.0f },
-        //
-        //     { x_pos,     y_pos + h,   0.0f, 0.0f },
-        //     { x_pos + w, y_pos,       1.0f, 1.0f },
-        //     { x_pos + w, y_pos + h,   1.0f, 0.0f }           
-        // };
-
         glBindTexture(GL_TEXTURE_2D, character.texture_id);
         glBindBuffer(GL_ARRAY_BUFFER, font_vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);

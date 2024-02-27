@@ -5,7 +5,7 @@
 
 int main(void)
 {
-    if (!window_init("Youtube Game", 1280, 720))
+    if (!window_init("Circle Madness", 1280, 720))
     {
         printf("Failed to initialize window.\n");
         return EXIT_FAILURE;
